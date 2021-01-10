@@ -46,17 +46,19 @@ public class Mesa {
         return domino.getDigitoEsquerda() == ponta.getDigitoDireita();
     }
 
-    public void jogarNaEsquerda(Domino domino) {
+    public void jogarNaEsquerda(Jogador jogador, Domino domino) {
         if (!podeJogarNaEsquerda(domino))
             throw new IllegalArgumentException(domino.toString());
 
+        jogador.dominos.remove(domino);
         dominos.add(0, domino);
     }
 
-    public void jogarNaDireita(Domino domino) {
+    public void jogarNaDireita(Jogador jogador, Domino domino) {
         if (!podeJogarNaDireita(domino))
             throw new IllegalArgumentException(domino.toString());
 
+        jogador.dominos.remove(domino);
         dominos.add(domino);
     }
 

@@ -27,6 +27,7 @@ public class Jogo {
     }
 
     public Jogador jogar() {
+        out.println("\nIniciando um novo jogo.");
         Domino.embaralhar(dominos);
         Jogador.distribuir(dominos, jogadores);
 

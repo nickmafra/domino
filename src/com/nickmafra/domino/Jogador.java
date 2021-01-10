@@ -18,6 +18,10 @@ public abstract class Jogador {
         this.nome = nome;
     }
 
+    public void reiniciar() {
+        dominos.clear();
+    }
+
     public static void distribuir(List<Domino> dominos, List<Jogador> jogadores) {
         int qtPecasPorJogador = dominos.size() / jogadores.size();
         for (Jogador jogador : jogadores) {

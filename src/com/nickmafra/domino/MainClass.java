@@ -1,5 +1,8 @@
 package com.nickmafra.domino;
 
+import com.nickmafra.domino.jogadores.JogaAQueTemMais;
+import com.nickmafra.domino.jogadores.JogadorAleatorio;
+
 import static java.lang.System.out;
 
 public class MainClass {
@@ -8,7 +11,7 @@ public class MainClass {
         int qtPartidas = 1000;
 
         Jogo jogo = new Jogo();
-        jogo.jogadores.add(new JogadorAleatorio("1"));
+        jogo.jogadores.add(new JogaAQueTemMais("JogaAQueTemMais"));
         jogo.jogadores.add(new JogadorAleatorio("2"));
         jogo.jogadores.add(new JogadorAleatorio("3"));
         jogo.jogadores.add(new JogadorAleatorio("4"));

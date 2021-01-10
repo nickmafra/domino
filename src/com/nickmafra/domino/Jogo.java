@@ -18,7 +18,7 @@ public class Jogo {
 
     public void prepararJogo() {
         for (Jogador jogador : jogadores)
-            jogador.dominos.clear();
+            jogador.reiniciar();
 
         dominos = Domino.gerarConjunto(N_BASE_DOMINO);
         mesa = new Mesa();

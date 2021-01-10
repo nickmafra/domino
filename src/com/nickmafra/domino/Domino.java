@@ -36,11 +36,16 @@ public class Domino {
         return digitoDireita;
     }
 
+    public boolean digitosIguais() {
+        return digitoEsquerda == digitoDireita;
+    }
+
+    public boolean possuiDigito(int digito) {
+        return digitoEsquerda == digito || digitoDireita == digito;
+    }
+
     public boolean possuiDigitoDaPontaEmComum(Domino domino) {
-        return digitoEsquerda == domino.digitoEsquerda
-                || digitoEsquerda == domino.digitoDireita
-                || digitoDireita == domino.digitoEsquerda
-                || digitoDireita == domino.digitoDireita;
+        return domino.possuiDigito(digitoEsquerda) || domino.possuiDigito(digitoDireita);
     }
 
     public void girar() {

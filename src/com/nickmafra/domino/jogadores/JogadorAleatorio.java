@@ -1,4 +1,8 @@
-package com.nickmafra.domino;
+package com.nickmafra.domino.jogadores;
+
+import com.nickmafra.domino.Domino;
+import com.nickmafra.domino.Jogador;
+import com.nickmafra.domino.Mesa;
 
 import java.util.List;
 import java.util.Random;
@@ -24,12 +28,15 @@ public class JogadorAleatorio extends Jogador {
     public void decidirJogada(Mesa mesa, List<Domino> dominosJogaveis) {
         int i = random.nextInt(dominosJogaveis.size());
         Domino domino = dominosJogaveis.get(i);
+        jogarDominoOndeDer(mesa, domino);
+    }
+
+    public void jogarDominoOndeDer(Mesa mesa, Domino domino) {
 
         if (random.nextBoolean()) domino.girar();
 
         if (!mesa.podeJogarNaEsquerda(domino)) {
             if (!mesa.podeJogarNaDireita(domino)) {
-                out.println("ERRO: Jogáveis: " + Domino.listToString(dominosJogaveis));
                 throw new IllegalStateException("Não jogável? " + domino);
             }
             mesa.jogarNaDireita(this, domino);

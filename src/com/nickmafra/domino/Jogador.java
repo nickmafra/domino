@@ -3,19 +3,20 @@ package com.nickmafra.domino;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.System.out;
-
 public abstract class Jogador {
 
     public String nome = "Jogador#" + this.hashCode();
     public final List<Domino> dominos = new ArrayList<>();
     public int vitorias = 0;
+    public boolean exibeMao;
 
-    public Jogador() {
+    public Jogador(String nome, boolean exibeMao) {
+        this.nome = nome;
+        this.exibeMao = exibeMao;
     }
 
-    public Jogador(String nome) {
-        this.nome = nome;
+    public Jogador(boolean exibeMao) {
+        this.exibeMao = exibeMao;
     }
 
     public void reiniciar() {
@@ -23,7 +24,7 @@ public abstract class Jogador {
     }
 
     public static void distribuir(List<Domino> dominos, List<Jogador> jogadores) {
-        int qtPecasPorJogador = dominos.size() / jogadores.size();
+        int qtPecasPorJogador = Domino.N_BASE;
         for (Jogador jogador : jogadores) {
             for (int i = 0; i < qtPecasPorJogador; i++) {
                 jogador.dominos.add(dominos.remove(0));
@@ -31,38 +32,34 @@ public abstract class Jogador {
         }
     }
 
-    public List<Domino> dominosJogaveis(Mesa mesa) {
-        List<Domino> dominosJogaveis = new ArrayList<>();
+    public List<Jogada> getJogadasPossiveis(Mesa mesa) {
+        List<Jogada> jogadasPossiveis = new ArrayList<>();
         for (Domino domino : dominos) {
-            if (mesa.podeJogarNaEsquerda(domino) || mesa.podeJogarNaDireita(domino)) {
-                dominosJogaveis.add(domino);
+            if (mesa.podeJogarNaEsquerda(domino)) {
+                jogadasPossiveis.add(new Jogada(-1, domino));
             }
         }
-        return dominosJogaveis;
+        for (Domino domino : dominos) {
+            if (mesa.podeJogarNaDireita(domino)) {
+                jogadasPossiveis.add(new Jogada(1, domino));
+            }
+        }
+        return jogadasPossiveis;
     }
 
     public boolean jogar(Mesa mesa) {
-        List<Domino> dominosJogaveis;
-        while (true) {
-            dominosJogaveis = dominosJogaveis(mesa);
-            if (!dominosJogaveis.isEmpty()) {
-                break;
-            } else if (mesa.dominosCompra.isEmpty()) {
-                out.println("Jogador " + this + " não possui pedra. Passando...");
-                return false;
-            } else {
-                out.println("Jogador " + this + " não possui pedra. Comprando...");
-                dominos.add(mesa.dominosCompra.remove(0));
-            }
+        List<Jogada> jogadasPossiveis = getJogadasPossiveis(mesa);
+        if (jogadasPossiveis.isEmpty()) {
+            return false;
         }
 
-        decidirJogada(mesa, dominosJogaveis);
+        decidirJogada(mesa, jogadasPossiveis);
         return true;
     }
 
     public abstract void decidirDominoSaida(Mesa mesa);
 
-    public abstract void decidirJogada(Mesa mesa, List<Domino> dominosJogaveis);
+    public abstract void decidirJogada(Mesa mesa, List<Jogada> jogadasPossiveis);
 
     public boolean bateu() {
         return dominos.isEmpty();
@@ -80,7 +77,11 @@ public abstract class Jogador {
         return nome;
     }
 
-    public String exibirMao() {
+    public String maoToString() {
         return Domino.listToString(dominos);
+    }
+
+    public String exibirMao() {
+        return "Mão do jogador " + nome + ": " + maoToString();
     }
 }

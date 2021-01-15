@@ -1,38 +1,41 @@
 package com.nickmafra.domino.jogadores;
 
 import com.nickmafra.domino.Domino;
-import com.nickmafra.domino.Jogador;
-import com.nickmafra.domino.Jogo;
+import com.nickmafra.domino.Jogada;
 import com.nickmafra.domino.Mesa;
 
 import java.util.List;
 
 public class JogaAQueTemMais extends JogadorAleatorio {
 
-    public JogaAQueTemMais(String nome) {
-        super(nome);
+    public JogaAQueTemMais(String nome, boolean exibirMao) {
+        super(nome, exibirMao);
     }
 
-    public Domino temMais(List<Domino> dominosJogaveis) {
-        int[] pontoPorDigito = new int[Jogo.N_BASE_DOMINO];
-        for (int digito = 0; digito < Jogo.N_BASE_DOMINO; digito++) {
-            for (Domino domino : dominosJogaveis)
-                if (domino.possuiDigito(digito))
+    public JogaAQueTemMais(boolean exibirMao) {
+        super("JogaAQueTemMais", exibirMao);
+    }
+
+    public Jogada temMais(List<Jogada> jogadasPossiveis) {
+        int[] pontoPorDigito = new int[Domino.N_BASE];
+        for (int digito = 0; digito < Domino.N_BASE; digito++) {
+            for (Jogada jogada : jogadasPossiveis)
+                if (jogada.domino.possuiDigito(digito))
                     pontoPorDigito[digito]++;
         }
-        Domino dominoVencedor = null;
+        Jogada jogadaVencedora = null;
         int pontoVencedor = -1;
-        for (Domino domino : dominosJogaveis) {
+        for (Jogada jogada : jogadasPossiveis) {
             int ocorrencia = Math.min(
-                    pontoPorDigito[domino.getDigitoDireita()],
-                    pontoPorDigito[domino.getDigitoEsquerda()]
+                    pontoPorDigito[jogada.domino.getDigitoDireita()],
+                    pontoPorDigito[jogada.domino.getDigitoEsquerda()]
             );
             if (ocorrencia > pontoVencedor) {
-                dominoVencedor = domino;
+                jogadaVencedora = jogada;
                 pontoVencedor = ocorrencia;
             }
         }
-        return dominoVencedor;
+        return jogadaVencedora;
     }
 
     @Override
@@ -41,12 +44,12 @@ public class JogaAQueTemMais extends JogadorAleatorio {
     }
 
     @Override
-    public void decidirJogada(Mesa mesa, List<Domino> dominosJogaveis) {
-        Domino domino = temMais(dominosJogaveis);
-        if (domino == null) {
-            super.decidirJogada(mesa, dominosJogaveis);
+    public void decidirJogada(Mesa mesa, List<Jogada> JogadasPossiveis) {
+        Jogada jogada = temMais(JogadasPossiveis);
+        if (jogada == null) {
+            super.decidirJogada(mesa, JogadasPossiveis);
         } else {
-            super.jogarDominoOndeDer(mesa, domino);
+            mesa.realizarJogada(this, jogada);
         }
     }
 }

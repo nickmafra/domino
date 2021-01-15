@@ -31,7 +31,7 @@ public class Mesa {
         Domino ponta = pontaEsquerda();
         if (domino.getDigitoDireita() == ponta.getDigitoEsquerda())
             return true;
-        domino.girar();
+        domino.flip();
         return domino.getDigitoDireita() == ponta.getDigitoEsquerda();
     }
 
@@ -42,7 +42,7 @@ public class Mesa {
         Domino ponta = pontaDireita();
         if (domino.getDigitoEsquerda() == ponta.getDigitoDireita())
             return true;
-        domino.girar();
+        domino.flip();
         return domino.getDigitoEsquerda() == ponta.getDigitoDireita();
     }
 
@@ -60,6 +60,14 @@ public class Mesa {
 
         jogador.dominos.remove(domino);
         dominos.add(domino);
+    }
+
+    public void realizarJogada(Jogador jogador, Jogada jogada) {
+        if (jogada.lado < 0) {
+            jogarNaEsquerda(jogador, jogada.domino);
+        } else {
+            jogarNaDireita(jogador, jogada.domino);
+        }
     }
 
     @Override

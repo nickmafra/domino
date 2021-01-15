@@ -1,23 +1,26 @@
 package com.nickmafra.domino;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Domino {
 
-    int digitoEsquerda;
-    int digitoDireita;
+    public static final int N_BASE = 7;
 
-    public static List<Domino> gerarConjunto(int nBaseDomino) {
-        int qtDominos = nBaseDomino * (nBaseDomino + 1) / 2;
-        List<Domino> dominos = new ArrayList<>(qtDominos);
-        for (int i = 0; i < nBaseDomino; i++) {
-            for (int j = i; j < nBaseDomino; j++) {
+    int digitoMenor;
+    int digitoMaior;
+
+    boolean flipped;
+
+    public static List<Domino> gerarConjunto() {
+        List<Domino> dominos = new ArrayList<>();
+        for (int i = 0; i < N_BASE; i++) {
+            for (int j = i; j < N_BASE; j++) {
                 Domino domino = new Domino();
-                domino.digitoEsquerda = i;
-                domino.digitoDireita = j;
+                domino.digitoMenor = i;
+                domino.digitoMaior = j;
                 dominos.add(domino);
             }
         }
@@ -29,34 +32,32 @@ public class Domino {
     }
 
     public int getDigitoEsquerda() {
-        return digitoEsquerda;
+        return flipped ? digitoMaior : digitoMenor;
     }
 
     public int getDigitoDireita() {
-        return digitoDireita;
+        return flipped ? digitoMenor : digitoMaior;
     }
 
     public boolean digitosIguais() {
-        return digitoEsquerda == digitoDireita;
+        return digitoMenor == digitoMaior;
     }
 
     public boolean possuiDigito(int digito) {
-        return digitoEsquerda == digito || digitoDireita == digito;
+        return digitoMenor == digito || digitoMaior == digito;
     }
 
     public boolean possuiDigitoDaPontaEmComum(Domino domino) {
-        return domino.possuiDigito(digitoEsquerda) || domino.possuiDigito(digitoDireita);
+        return domino.possuiDigito(digitoMenor) || domino.possuiDigito(digitoMaior);
     }
 
-    public void girar() {
-        int esquerdaBkp = digitoEsquerda;
-        digitoEsquerda = digitoDireita;
-        digitoDireita = esquerdaBkp;
+    public void flip() {
+        flipped = !flipped;
     }
 
     @Override
     public String toString() {
-        return "[" + digitoEsquerda + "|" + digitoDireita + "]";
+        return "[" + getDigitoEsquerda() + "|" + getDigitoDireita() + "]";
     }
 
     public static String listToString(List<Domino> dominos) {
@@ -72,6 +73,20 @@ public class Domino {
     }
 
     public int pontos() {
-        return digitoEsquerda + digitoDireita;
+        return digitoMenor + digitoMaior;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Domino domino = (Domino) o;
+        return digitoMenor == domino.digitoMenor &&
+                digitoMaior == domino.digitoMaior;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(digitoMenor, digitoMaior);
     }
 }
